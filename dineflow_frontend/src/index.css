@@ -14,57 +14,176 @@
     @apply bg-bone text-ink;
   }
 
-  /* Fraunces — set tasteful optical sizing + slight softness */
   .font-display {
     font-family: 'Fraunces', serif;
     font-optical-sizing: auto;
     font-variation-settings: 'SOFT' 50, 'WONK' 0;
   }
 
-  /* Number-tabular tweak for prices/totals */
   .num {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Custom scrollbar in the side panel */
-  .nice-scroll::-webkit-scrollbar         { width: 8px; }
-  .nice-scroll::-webkit-scrollbar-track   { background: transparent; }
-  .nice-scroll::-webkit-scrollbar-thumb   { background: rgba(26,22,20,0.15); border-radius: 4px; }
-  .nice-scroll::-webkit-scrollbar-thumb:hover { background: rgba(26,22,20,0.28); }
+  .nice-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .nice-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .nice-scroll::-webkit-scrollbar-thumb {
+    background: rgba(26, 22, 20, 0.15);
+    border-radius: 4px;
+  }
+
+  .nice-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(26, 22, 20, 0.28);
+  }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
-           bg-ink text-cream font-medium tracking-tightish
-           hover:bg-ink-2 active:scale-[0.98] transition disabled:opacity-50
-           disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-ink text-cream font-medium tracking-tightish hover:bg-ink-2 active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
-           bg-ivory text-ink border border-sand font-medium tracking-tightish
-           hover:bg-cream active:scale-[0.98] transition disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-ivory text-ink border border-sand font-medium tracking-tightish hover:bg-cream active:scale-[0.98] transition disabled:opacity-50;
   }
+
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full
-           text-umber hover:text-ink hover:bg-cream transition;
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-full text-umber hover:text-ink hover:bg-cream transition;
   }
+
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
-           bg-clay-50 text-clay-700 border border-clay-100 font-medium
-           hover:bg-clay-100 transition disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-clay-50 text-clay-700 border border-clay-100 font-medium hover:bg-clay-100 transition disabled:opacity-50;
   }
 
   .input-text {
-    @apply w-full px-4 py-3 rounded-2xl bg-ivory border border-sand
-           focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10
-           placeholder:text-umber/60 transition;
+    @apply w-full px-4 py-3 rounded-2xl bg-ivory border border-sand focus:outline-none focus:border-ink focus:ring-2 focus:ring-ink/10 placeholder:text-umber/60 transition;
   }
 }
 
-/* Subtle paper texture for body */
 .paper-bg {
   background-image:
     radial-gradient(ellipse 1200px 800px at 20% -10%, rgba(199, 115, 22, 0.04), transparent 60%),
     radial-gradient(ellipse 800px 600px at 110% 20%, rgba(46, 67, 116, 0.03), transparent 60%);
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   PRINT — only the receipt is visible on paper.
+   ──────────────────────────────────────────────────────────────────────── */
+
+.print-receipt {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  /* Hide every screen element… */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* …except the receipt and its descendants */
+  .print-receipt,
+  .print-receipt * {
+    visibility: visible !important;
+  }
+
+  .print-receipt {
+    display: block !important;
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    padding: 5mm 4mm;
+    color: #000;
+    background: #fff;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+
+  .r-header {
+    text-align: center;
+    margin-bottom: 2mm;
+  }
+
+  .r-name {
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .r-loc {
+    font-size: 8.5pt;
+    margin-top: 1mm;
+    letter-spacing: 0.3px;
+  }
+
+  .r-divider {
+    border-top: 1px dashed #000;
+    margin: 2.5mm 0;
+  }
+
+  .r-divider-bold {
+    border-top: 1px solid #000;
+    margin: 2.5mm 0;
+  }
+
+  .r-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4mm 0;
+    gap: 3mm;
+  }
+
+  .r-items-head {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 8.5pt;
+    letter-spacing: 0.5px;
+    padding-bottom: 1.5mm;
+    border-bottom: 1px solid #000;
+    margin-bottom: 1.5mm;
+  }
+
+  .r-item .r-item-name {
+    flex: 1;
+    word-break: break-word;
+  }
+
+  .r-item span:last-child {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .r-grand {
+    font-weight: 700;
+    font-size: 13pt;
+    padding: 1.5mm 0;
+    letter-spacing: 0.5px;
+  }
+
+  .r-footer {
+    text-align: center;
+    font-size: 8.5pt;
+    margin-top: 3mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+    line-height: 1.6;
+  }
 }

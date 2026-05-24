@@ -5,7 +5,9 @@ from typing import Literal
 
 
 class SetupRequest(BaseModel):
-    total_tables: int = Field(..., ge=1, le=100, description="Number of tables in the restaurant (1–100)")
+    total_tables: int = Field(
+        ..., ge=1, le=100, description="Number of tables in the restaurant (1–100)"
+    )
 
 
 class OccupyRequest(BaseModel):

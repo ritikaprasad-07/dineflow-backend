@@ -1,29 +1,42 @@
-import { Banknote, CreditCard, Smartphone, ChevronLeft } from 'lucide-react'
+import { Banknote, CreditCard, Smartphone, ChevronLeft, Printer } from 'lucide-react'
 import { inr, cls } from '../lib/format'
 
 const METHODS = [
   { id: 'cash', label: 'Cash', icon: Banknote },
   { id: 'card', label: 'Card', icon: CreditCard },
-  { id: 'upi',  label: 'UPI',  icon: Smartphone },
+  { id: 'upi', label: 'UPI', icon: Smartphone },
 ]
 
-export default function BillView({ bill, onBack, onSelectPayment, busy, error }) {
+export default function BillView({
+  bill, onBack, onSelectPayment, busy, error, onPrintBill,
+}) {
   return (
     <div className="p-6 sm:p-8">
-      <button onClick={onBack} className="btn-ghost -ml-3 mb-4 text-[13px]">
-        <ChevronLeft size={15} />
-        Back to order
-      </button>
+      <div className="flex items-center justify-between mb-4">
+        <button onClick={onBack} className="btn-ghost -ml-3 text-[13px]">
+          <ChevronLeft size={15} />
+          Back to order
+        </button>
+        {onPrintBill && (
+          <button
+            onClick={onPrintBill}
+            className="btn-ghost text-[13px]"
+            title="Print pre-payment receipt"
+          >
+            <Printer size={14} />
+            Print Bill
+          </button>
+        )}
+      </div>
 
       <p className="text-[11px] uppercase tracking-[0.18em] text-saffron-dark font-semibold mb-2">
         ✷ &nbsp; The Bill &nbsp; ✷
       </p>
       <h2 className="font-display text-[32px] leading-[1.05] tracking-tighter2 text-ink mb-1">
-        For {bill.customer_name},<br/>
-        <span className="italic">Table {String(bill.table_id).padStart(2,'0')}.</span>
+        For {bill.customer_name},<br />
+        <span className="italic">Table {String(bill.table_id).padStart(2, '0')}.</span>
       </h2>
 
-      {/* Line items */}
       <div className="mt-7 mb-6 rounded-3xl bg-ivory border border-sand p-5 shadow-card">
         <ul className="divide-y divide-sand/60">
           {bill.items.map((it, i) => (
@@ -43,16 +56,13 @@ export default function BillView({ bill, onBack, onSelectPayment, busy, error })
         </div>
 
         <div className="border-t border-sand mt-3 pt-4 flex items-baseline justify-between">
-          <span className="font-display text-[16px] tracking-tightish text-ink">
-            Grand Total
-          </span>
+          <span className="font-display text-[16px] tracking-tightish text-ink">Grand Total</span>
           <span className="font-display num text-[36px] leading-none tracking-tighter2 text-ink">
             {inr(bill.grand_total)}
           </span>
         </div>
       </div>
 
-      {/* Payment selection */}
       <h3 className="font-display text-[18px] tracking-tightish text-ink mb-3">
         How are they paying?
       </h3>
@@ -74,9 +84,7 @@ export default function BillView({ bill, onBack, onSelectPayment, busy, error })
         ))}
       </div>
 
-      {error && (
-        <p className="mt-4 text-[12px] font-mono text-clay-700">{error}</p>
-      )}
+      {error && <p className="mt-4 text-[12px] font-mono text-clay-700">{error}</p>}
     </div>
   )
 }
